@@ -211,15 +211,7 @@ function NewCandidateRow({
         placeholder="+ candidate, e.g. JAL direct 09:30"
         className={`flex-1 ${inputCls}`}
       />
-      <select
-        value={stops}
-        onChange={(e) => setStops(e.target.value as Stops)}
-        className={inputCls}
-      >
-        <option value="direct">direct</option>
-        <option value="one-stop">one-stop</option>
-        <option value="two-plus">two-plus</option>
-      </select>
+      <StopsChips value={stops} onChange={setStops} />
       <input
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
@@ -228,6 +220,45 @@ function NewCandidateRow({
         className={`w-28 ${inputCls}`}
       />
     </form>
+  );
+}
+
+const STOPS: Stops[] = ["direct", "one-stop", "two-plus"];
+
+/** Single-selection chips. All three values visible at once: one tap, no menu. */
+function StopsChips({
+  value,
+  onChange,
+}: {
+  value: Stops;
+  onChange: (s: Stops) => void;
+}) {
+  return (
+    <div
+      role="radiogroup"
+      aria-label="Stops"
+      className="flex items-center gap-1"
+    >
+      {STOPS.map((s) => {
+        const selected = s === value;
+        return (
+          <button
+            key={s}
+            type="button"
+            role="radio"
+            aria-checked={selected}
+            onClick={() => onChange(s)}
+            className={`rounded-full border px-3 py-1 text-sm transition-colors ${
+              selected
+                ? "border-zinc-900 bg-zinc-900 font-medium text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
+                : "border-zinc-300 text-zinc-600 hover:border-zinc-500 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-zinc-500"
+            }`}
+          >
+            {s}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 

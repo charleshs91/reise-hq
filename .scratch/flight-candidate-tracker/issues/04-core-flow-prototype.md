@@ -40,3 +40,4 @@ Three variants were built on a throwaway route (`/prototype/core-flow?variant=A|
 - A **candidate detail page** (full price history, per-observation remarks) is explicitly a **follow-up enhancement**, not v1. B shows only a short recent-price strip per row, so v1 accepts that the full history is not readable in place.
 - The **remark** field is the casualty of the fast path: in B it is not on the row. v1 keeps remark in the model (it is in `CONTEXT.md`) but the shelf does not surface it; where it gets entered is for the spec to settle.
 - Adding a Candidate and logging its first price are one act (B's new-candidate row takes a price).
+- **Stops is single-selection chips, not a dropdown.** Three values is few enough to show at once, so all three are visible and selecting one is a single tap with no menu to open — consistent with `stops` being three buckets a human reads off a results page rather than a value worth a picker.
