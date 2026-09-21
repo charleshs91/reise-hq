@@ -2,7 +2,7 @@
 
 Parent: ../map.md
 Type: prototype
-Status: open
+Status: claimed
 Blocked by: 02 (resolved)
 
 ## Question
