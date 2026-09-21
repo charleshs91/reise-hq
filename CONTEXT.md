@@ -51,8 +51,15 @@ generated, never fetched.
 
 An airport or city the User can search from or to, as a named thing rather than a
 raw string: a display name the human reads, and the identifier Skyscanner's URLs
-use for it. The two are distinct — a Skyscanner place identifier is not derivable
-from an IATA code — so the set of known Places is curated.
+use for it.
+
+That identifier is of one of two kinds, and they are different systems: the
+**IATA code** of a single airport, or a **Skyscanner city slug** standing for all
+the airports of a multi-airport city. A city slug is never derivable from an IATA
+code, so the set of known Places is curated — every slug in it was read off a real
+Skyscanner URL rather than computed. A Place the User cannot name is a Place they
+cannot search, and that is the intended trade: a wrong identifier does not fail
+loudly, it quietly returns a plausible page about somewhere else.
 
 ## Candidate
 
@@ -83,7 +90,12 @@ Observations are **append-only**. A Candidate may have any number of them, sever
 on the same day, and none is ever edited or overwritten — a mistaken entry is
 corrected by adding another observation, not by changing the old one. The price
 history is the only irreplaceable data in the system: it cannot be re-fetched from
-anywhere, so nothing in the language permits destroying it.
+anywhere.
+
+There is exactly one way it is ever destroyed: **deleting the Candidate that holds
+it**, a deliberate act on a whole row. No observation is ever removed on its own.
+The exception exists because a Candidate mistyped mid-sweep would otherwise be
+permanent, and it is the only one.
 
 The remark is the escape hatch that lets the rest of the model stay this small:
 whatever the terms above do not capture goes there in a few words.
