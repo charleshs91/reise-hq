@@ -1,1 +1,24 @@
+# Single source of truth for the whole workspace. Package-level .gitignore files
+# are deliberately absent; patterns here are unanchored so they match at any depth.
+
+# dependencies
+node_modules/
+
+# build output
+.next/
+build/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# testing
+coverage/
+
+# env files & secrets
+.env*
+*.pem
+
+# misc
 .DS_Store
+*.log
+.vercel
