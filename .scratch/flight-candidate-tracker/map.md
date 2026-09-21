@@ -18,16 +18,17 @@ A written spec for v1 of the flight-candidate tracker — trips, searches, manua
 
 - Destination and outer scope settled in the charting session: spec-first; per-**Candidate** price history via repeated **PriceObservation**s; a **Trip** contains multiple **Searches**, each with its own deep link; one-way and round-trip only; exact dates only; deep links are generated, never fetched.
 - [Skyscanner deep-link URL format](issues/01-skyscanner-deep-link-format.md): use the de-facto consumer URL `/transport/flights/{origin}/{destination}/{yymmdd}[/{yymmdd}]/` behind a single `buildSkyscannerUrl()` seam; one-way is simply the missing second date; pax/cabin/currency/locale are query params; places need a hand-curated lookup (Skyscanner city slugs are not derivable from IATA), and bad input degrades silently rather than 404ing. Full findings: [research note](research/skyscanner-deep-link-format.md).
+- [Domain model and glossary](issues/02-domain-model-and-glossary.md): **Trip** is a name-only folder of **Search**es; a Search fixes route, exact dates, currency — and, in v1, one adult in economy as a property of the language rather than fields — so every price under it is comparable by construction. One-way vs round-trip is derived from the presence of a return date. **Place** is a first-class curated term (display name + Skyscanner identifier). **Candidate** is a free-text label plus a required three-valued `stops`; **PriceObservation** is amount + observedAt + optional remark, append-only and never overwritten. **User** is named as owner; no "booked" state in v1. Written up in [`CONTEXT.md`](../../CONTEXT.md).
 
 ## Not yet specified
 
 - Whether to adopt the official affiliate referral URL (needs an impact.com `mediaPartnerId`) instead of the consumer URL.
-- How place identifiers are stored and how the curated IATA/city-slug lookup is sourced and maintained.
+- How the curated **Place** list is sourced, stored and maintained, and how the user picks one when creating a Search.
 - How price history is presented and how it supports the buy decision (table only in v1 was the instinct; charts/badges deferred).
-- Multi-currency: whether observations may mix currencies within a search, and whether any conversion happens.
 - Auth and multi-user: the shape of ownership once it stops being single-user.
+- Party size and cabin class: both cut from v1 as fixed (one adult, economy); reopen together when a real multi-passenger or business-class search appears.
 - Hosting and deployment of the web app and its database.
-- Editing and deleting semantics: can an observation be corrected, can a candidate be archived once booked or expired.
+- Deleting semantics: can a Trip, Search or Candidate be removed or archived once it is dead. (Observations are settled: append-only, corrected by appending.)
 - What happens to a trip after the flight is bought — terminal state, or just stale data.
 
 ## Out of scope

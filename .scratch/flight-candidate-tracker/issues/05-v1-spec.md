@@ -3,7 +3,7 @@
 Parent: ../map.md
 Type: grilling
 Status: open
-Blocked by: 02, 03, 04
+Blocked by: 02 (resolved), 03, 04
 
 ## Question
 

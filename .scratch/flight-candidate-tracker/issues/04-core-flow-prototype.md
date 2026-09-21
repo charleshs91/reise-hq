@@ -3,7 +3,7 @@
 Parent: ../map.md
 Type: prototype
 Status: open
-Blocked by: 02
+Blocked by: 02 (resolved)
 
 ## Question
 
