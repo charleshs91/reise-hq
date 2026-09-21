@@ -1,0 +1,38 @@
+{
+  "name": "reise-hq",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@12.5.1",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "pnpm --filter web dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r --parallel typecheck",
+    "lint": "eslint .",
+    "test": "pnpm -r --parallel test",
+    "format": "prettier --write --cache .",
+    "format:check": "prettier --check --cache .",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^2.1.1",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "16.3.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.1",
+    "prettier": "^3.9.8",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "typescript-eslint": "^8.46.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,mjs,yaml,yml}": [
+      "prettier --write"
+    ]
+  }
+}
