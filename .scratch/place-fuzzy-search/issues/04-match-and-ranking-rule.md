@@ -64,6 +64,8 @@ an identifier never scores at all.
 
 ### Ranking: five tiers
 
+> **Superseded in part by [Two ranking defects the real dataset exposed](07-tier-5-ranking-defects.md):** tier 5 splits into id prefix (5) and remaining substring (6); city slugs sort first in every tie-break; the `la` row below was wrong about the data and is corrected, and a `tpe` row is added. 07's answer holds the current table.
+
 | Tier | Match                                                              |
 | ---- | ------------------------------------------------------------------ |
 | 1    | query equals a Place `id` (exact code or slug)                     |
