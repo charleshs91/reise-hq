@@ -1,24 +1,22 @@
-/**
- * Placeholder domain model. Exists only to prove the workspace boundary:
- * `apps/web` imports this package, typechecks it, and renders its output.
- * Replace with the real travel domain when features start.
- */
+/** A name-only folder of Searches. Its dates are read off its Searches, never stored. */
 export type Trip = {
   readonly id: string;
-  readonly destination: string;
-  readonly startDate: string;
-  readonly endDate: string;
+  readonly name: string;
 };
 
-/** Inclusive length of a trip in days. */
-export function tripDurationInDays(trip: Trip): number {
-  const start = Date.parse(trip.startDate);
-  const end = Date.parse(trip.endDate);
-
-  if (Number.isNaN(start) || Number.isNaN(end)) {
-    throw new Error(`Trip ${trip.id} has an unparseable date range`);
+/**
+ * The earliest departure across a Trip's Searches that is not in the past, or
+ * null. Dates are ISO `YYYY-MM-DD`, so they compare as strings.
+ */
+export function nextDepartureDate(
+  searches: readonly { readonly departureDate: string }[],
+  today: string,
+): string | null {
+  let next: string | null = null;
+  for (const { departureDate } of searches) {
+    if (departureDate >= today && (next === null || departureDate < next)) {
+      next = departureDate;
+    }
   }
-
-  const msPerDay = 24 * 60 * 60 * 1000;
-  return Math.round((end - start) / msPerDay) + 1;
+  return next;
 }

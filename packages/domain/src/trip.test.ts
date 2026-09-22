@@ -1,26 +1,33 @@
 import { describe, expect, it } from "vitest";
-import { tripDurationInDays, type Trip } from "./index";
+import { nextDepartureDate } from "./index";
 
-const trip = (overrides: Partial<Trip> = {}): Trip => ({
-  id: "t1",
-  destination: "Lisbon",
-  startDate: "2026-04-01",
-  endDate: "2026-04-05",
-  ...overrides,
-});
+const today = "2026-09-23";
 
-describe("tripDurationInDays", () => {
-  it("counts both the first and last day", () => {
-    expect(tripDurationInDays(trip())).toBe(5);
+describe("nextDepartureDate", () => {
+  it("is null for a Trip with no Searches", () => {
+    expect(nextDepartureDate([], today)).toBeNull();
   });
 
-  it("returns 1 for a same-day trip", () => {
-    expect(tripDurationInDays(trip({ endDate: "2026-04-01" }))).toBe(1);
+  it("is the earliest departure not in the past", () => {
+    expect(
+      nextDepartureDate(
+        [
+          { departureDate: "2026-12-01" },
+          { departureDate: "2026-10-05" },
+          { departureDate: "2026-09-01" },
+        ],
+        today,
+      ),
+    ).toBe("2026-10-05");
   });
 
-  it("throws on an unparseable date", () => {
-    expect(() => tripDurationInDays(trip({ endDate: "not-a-date" }))).toThrow(
-      /unparseable date range/,
-    );
+  it("counts a departure today as not in the past", () => {
+    expect(nextDepartureDate([{ departureDate: today }], today)).toBe(today);
+  });
+
+  it("is null when every Search has departed", () => {
+    expect(
+      nextDepartureDate([{ departureDate: "2026-01-01" }], today),
+    ).toBeNull();
   });
 });

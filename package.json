@@ -15,7 +15,11 @@
     "format": "prettier --write --cache .",
     "format:check": "prettier --check --cache .",
     "prepare": "husky",
-    "places:generate": "pnpm --filter @reise-hq/db places:generate"
+    "places:generate": "pnpm --filter @reise-hq/db places:generate",
+    "db:generate": "pnpm --filter @reise-hq/db db:generate",
+    "db:migrate": "pnpm --filter @reise-hq/db db:migrate",
+    "db:seed": "pnpm --filter @reise-hq/db db:seed",
+    "db:backup": "pnpm --filter @reise-hq/db db:backup"
   },
   "devDependencies": {
     "@eslint/compat": "^2.1.1",

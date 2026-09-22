@@ -10,13 +10,22 @@
     "places:generate": "node scripts/places-generate.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "node scripts/db-migrate.ts",
+    "db:seed": "node scripts/db-seed.ts",
+    "db:backup": "node scripts/db-backup.ts"
   },
   "dependencies": {
-    "@reise-hq/domain": "workspace:*"
+    "@reise-hq/domain": "workspace:*",
+    "better-sqlite3": "^13.0.3",
+    "drizzle-orm": "0.45.3",
+    "uuid": "^14.0.2"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^24.0.0",
+    "drizzle-kit": "0.31.11",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4"
   }
