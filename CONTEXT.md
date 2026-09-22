@@ -56,8 +56,9 @@ use for it.
 That identifier is of one of two kinds, and they are different systems: the
 **IATA code** of a single airport, or a **Skyscanner city slug** standing for all
 the airports of a multi-airport city. A city slug is never derivable from an IATA
-code, so the set of known Places is curated — every slug in it was read off a real
-Skyscanner URL rather than computed. A Place the User cannot name is a Place they
+code. The known Places are an open airport dataset plus a small set of city slugs:
+the dataset supplies the IATA codes, and every city slug was read off a real
+Skyscanner URL by a human, never computed. A Place the User cannot name is a Place they
 cannot search, and that is the intended trade: a wrong identifier does not fail
 loudly, it quietly returns a plausible page about somewhere else.
 
