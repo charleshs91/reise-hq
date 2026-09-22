@@ -2,7 +2,7 @@
 
 Parent: ../map.md
 Type: grilling
-Status: open
+Status: resolved
 Blocked by: none <!-- 02, 03, 04, 05, 07 resolved -->
 
 ## Question
@@ -29,3 +29,17 @@ implementation agent reads one consistent story.
   airports. Put it where whoever adds the fifteenth city will find it.
 - **Check the invariant**: confirm nothing here slows the logging sweep, and say so.
 - Re-triage every touched issue.
+
+## Answer
+
+Applied. Decisions taken in this session:
+
+- **The Place input is its own slice**: [12 — Place search input](../../flight-candidate-tracker/issues/12-place-search-input.md), depending on 07. Issue 09 depends on it. Existing slices keep their numbers.
+- **The two-month date picker is in v1** and belongs to issue 09. One-way is an explicit `Save as one-way` action that only saves a Search with no return date. The model is unchanged: there is no stored flag, and round-trip is still derived. The spec's "no toggle" became "no stored flag". It is called a _date picker_, never a "range", so it does not clash with the glossary's "never a range".
+- **The verification ritual** goes in the header comment of the curated overlay file (required by issue 06), and the spec's Places section points to it.
+- **CONTEXT.md**: in the Place definition, the "curated" claim now covers city slugs only: an open airport dataset plus human-verified city slugs. It is still one term.
+- **No new ADR**: ADR 0002 already records the decision; the spec now links it.
+- **Invariant checked**: all of this concerns Search creation. The logging sweep is untouched, and the spec now says so.
+- **Triage**: 06, 07, 09 and 12 are `ready-for-agent`.
+
+Files touched: `spec.md` (Creating a Search, a new Place search subsection, Places, the header, the slice table), `CONTEXT.md`, and issues 06, 07, 09 and 12 (new).
