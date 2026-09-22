@@ -3,7 +3,7 @@
 Parent: ../map.md
 Type: grilling
 Status: open
-Blocked by: 02, 03, 04, 05
+Blocked by: 03, 04, 05 <!-- 02 resolved -->
 
 ## Question
 
@@ -23,5 +23,9 @@ implementation agent reads one consistent story.
   apply the edits named in ticket 03. Decide whether the Place input is a seventh slice
   or belongs inside issue 09 (the Search-creation form).
 - **ADR**: write the one ticket 03 called for, if it did.
+- **Write down the verification ritual.** [02](02-verify-city-slugs.md) found a 45%
+  silent-failure rate on derived slugs. Adding a city slug must be documented as: search
+  Skyscanner by hand, read the slug off the URL, confirm the results span the city's
+  airports. Put it where whoever adds the fifteenth city will find it.
 - **Check the invariant**: confirm nothing here slows the logging sweep, and say so.
 - Re-triage every touched issue.

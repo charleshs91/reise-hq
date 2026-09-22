@@ -18,7 +18,8 @@ the existing v1 slices change.
 - **The two seed inputs.** A generated airports file (derived from the source in 01,
   regenerable, never hand-edited) plus a small hand-written curated file holding the
   city slugs and any override. Confirm the shape of each, where they live, and the
-  conflict rule when both describe the same identifier.
+  conflict rule when both describe the same identifier. The curated file's content is
+  already settled: the verified 14 from [02](02-verify-city-slugs.md).
 - **Regeneration.** What command produces the generated file, and is the file committed
   or built at seed time? Committed means a reviewable diff and no network at install;
   built means no large blob in git history.
