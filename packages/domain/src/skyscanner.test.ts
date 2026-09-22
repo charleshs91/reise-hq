@@ -31,7 +31,7 @@ const search = (overrides: Partial<Search> = {}): Search => ({
   destination: jfk,
   departureDate: "2026-03-15",
   returnDate: null,
-  currency: "GBP",
+  currency: "TWD",
   ...overrides,
 });
 
@@ -40,13 +40,13 @@ const query = "adults=1&cabinclass=economy";
 describe("buildSkyscannerUrl", () => {
   it("builds a one-way link as the missing second date segment", () => {
     expect(buildSkyscannerUrl(search())).toBe(
-      `https://www.skyscanner.net/transport/flights/lhr/jfk/260315/?${query}&rtn=0&currency=GBP&locale=en-GB&market=UK`,
+      `https://www.skyscanner.net/transport/flights/lhr/jfk/260315/?${query}&rtn=0&currency=TWD&locale=zh-TW&market=TW`,
     );
   });
 
   it("builds a round-trip link with both date segments", () => {
     expect(buildSkyscannerUrl(search({ returnDate: "2026-03-22" }))).toBe(
-      `https://www.skyscanner.net/transport/flights/lhr/jfk/260315/260322/?${query}&rtn=1&currency=GBP&locale=en-GB&market=UK`,
+      `https://www.skyscanner.net/transport/flights/lhr/jfk/260315/260322/?${query}&rtn=1&currency=TWD&locale=zh-TW&market=TW`,
     );
   });
 
@@ -56,8 +56,8 @@ describe("buildSkyscannerUrl", () => {
   });
 
   it("takes the currency from the Search", () => {
-    expect(buildSkyscannerUrl(search({ currency: "TWD" }))).toContain(
-      "currency=TWD",
+    expect(buildSkyscannerUrl(search({ currency: "JPY" }))).toContain(
+      "currency=JPY",
     );
   });
 

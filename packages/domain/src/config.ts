@@ -4,7 +4,7 @@
  * with; the link uses the currency stored on the Search.
  */
 export const appConfig = {
-  currency: "GBP",
-  locale: "en-GB",
-  market: "UK",
+  currency: "TWD",
+  locale: "zh-TW",
+  market: "TW",
 } as const;

@@ -103,7 +103,7 @@ describe("searches", () => {
     const tripId = createTrip(db, "Zürich");
     newSearch(tripId, { returnDate: "2026-10-05" });
     const [search] = getTripPage(db, tripId)?.searches ?? [];
-    expect(search?.currency).toBe("GBP");
+    expect(search?.currency).toBe("TWD");
     expect(search?.origin).toEqual({
       id: "LHR",
       kind: "airport",
