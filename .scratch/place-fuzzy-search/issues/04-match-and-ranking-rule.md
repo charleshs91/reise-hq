@@ -15,7 +15,10 @@ score.
 - **The order.** Proposed: exact IATA match first, then curated city-slug entries whose
   city name prefix-matches, then airports whose city prefix-matches, then name
   substring. Confirm or reshape it, and settle ties (alphabetical? by airport type, so
-  `large_airport` outranks `medium_airport`?).
+  `large_airport` outranks `medium_airport`?). **[03](03-where-places-live.md) carried a
+  `type` column on the bet that you want this — if the ranking ignores airport size, say
+  so and the column gets dropped.** Note the seeded set is now ~3,244 rows
+  (`scheduled_service = 'yes'` required), not 4,568.
 - **City slugs above their own airports.** Typing "London" should put "London — all
   airports" above LHR/LGW/STN/LCY. Does that hold when the query matches an airport name
   better than the city name ("Heathrow")?
