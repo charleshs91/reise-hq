@@ -1,0 +1,37 @@
+# Map: Place Fuzzy Search
+
+Label: wayfinder:map
+
+## Destination
+
+An **amendment to the shipped v1 spec** of the flight-candidate tracker: `spec.md`, `CONTEXT.md`, implementation issues 06/07 and any ADR it warrants, revised so that picking a **Place** when creating a **Search** is a type-to-search input over a seeded dataset of thousands of airports, rather than a dropdown over a hand-curated list of a few dozen. Landed before v1 is implemented, so the Place picker is built once.
+
+## Notes
+
+- Parent effort: [flight-candidate-tracker](../flight-candidate-tracker/map.md) — its map is resolved and its [spec](../flight-candidate-tracker/spec.md) is `ready-for-agent`. Nothing is built yet.
+- Domain: personal travel planning. Single-user, self-hosted. Glossary is [`CONTEXT.md`](../../CONTEXT.md); storage is [ADR 0001](../../docs/adr/0001-sqlite-for-single-user-storage.md).
+- Standing preference: **keep v1 as simple as possible**. When in doubt, cut it to fog rather than specify it.
+- The invariant everything here leans on: **the User can never type a free-form identifier.** A wrong Skyscanner identifier does not error — it returns a plausible page about somewhere else. Fuzzy search widens the set of pickable Places; it must not open the door to unverified ones.
+- The other invariant, from the parent map: **logging a price takes a few seconds.** This effort touches Search creation, not the logging sweep, so it should not be able to regress it — check that assumption before specifying.
+- Every session: consult `grilling` and `domain-modeling`. `prototype` for UI-shape tickets, `research` for external-fact tickets.
+- Planning effort: produce decisions and an amended spec, not implementation.
+
+## Decisions so far
+
+- Charting session settled the outer shape: the driver is that **the curated list is too small** and adding a Place is a code edit — fuzzy search is the UI, the dataset is the substance. The Place universe becomes a **bulk-imported open airport dataset**, not a live call to Skyscanner's autosuggest (that would reintroduce the Skyscanner dependency v1 ruled out). Matching is **substring, not typo-tolerant**, over name + city + IATA; country is displayed, never matched. Places are **seeded into SQLite** and queried there, not held as a domain constant. **Place stays one term** — the dataset is the set of known Places, not a separate reference type — and `Place.id` remains the Skyscanner identifier itself. Multi-airport cities stay supported via their curated city slugs, which rank above their constituent airports. The amendment lands in v1 rather than as a v1.1.
+- [Is OurAirports a viable source for the Place dataset?](issues/01-airport-dataset-source.md): **yes, public domain** (Unlicense; no attribution required). `airports.csv` + `countries.csv` from `davidmegginson.github.io/ourairports-data`, nightly. The agreed filter (IATA present, type large/medium) leaves **4,568 rows, ~534 KB as JSON / ~380 KB as a SQLite table** — small enough to commit the generated seed rather than the 13 MB CSV. Quality is high: **zero duplicate IATA codes** anywhere in the source. Two things the dataset cannot do: it carries **no metro codes at all** (confirming the curated city-slug overlay is load-bearing, not a convenience), and 29% of the filtered rows have `scheduled_service = no`, which is a live filter decision on [03](issues/03-where-places-live.md). OpenFlights is share-alike, derived, and stale; IATA's directory is paid. Full findings: [research note](research/airport-dataset-source.md).
+
+## Not yet specified
+
+- Refreshing the dataset over time: the source is regenerated nightly and its `type` lags reality (closed airports keep their old type until someone reclassifies them), airports open and close. Whether regeneration is a manual `pnpm` script run when someone notices, or something scheduled — and what happens to a Search pointing at a Place that has left the dataset.
+- Typo tolerance and alias matching ("Heathrow", "Nueva York"). Deliberately not in the first cut; revisit if substring matching turns out to miss things in real use.
+- Aliases are cheaper than expected: OurAirports ships a `keywords` column that already holds them (LHR's reads `LON, Londres`). If substring matching misses things in real use, that column is the first thing to reach for.
+- Recently-used or favourite Places surfacing above search results, once there is real usage to say whether it helps.
+- Non-airport origins and destinations (rail stations, bus). Skyscanner has them; whether this model should is untouched.
+- Whether the curated overlay ever needs an in-app editing surface, or stays a code edit forever.
+
+## Out of scope
+
+- **Skyscanner's autosuggest / places API.** Ruled out with the parent map's no-fetching boundary: an undocumented endpoint, a live third-party dependency at type time, and its own anti-bot question. v1 generates links; it does not call Skyscanner.
+- **A typo-tolerant fuzzy library** (Fuse.js and friends) for this cut. Typo tolerance on 3-letter airport codes produces confidently wrong matches — the exact silent-failure mode this domain punishes.
+- **Anything in the parent map's Out of scope section** — automated price fetching, multi-city, whole-month links, sharing, other providers, notifications, import/export — unchanged.
