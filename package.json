@@ -14,7 +14,8 @@
     "test": "pnpm -r --parallel test",
     "format": "prettier --write --cache .",
     "format:check": "prettier --check --cache .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "places:generate": "pnpm --filter @reise-hq/db places:generate"
   },
   "devDependencies": {
     "@eslint/compat": "^2.1.1",

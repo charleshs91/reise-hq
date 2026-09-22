@@ -228,6 +228,22 @@ importers:
         specifier: ^3.2.4
         version: 3.2.7(@types/node@24.13.6)(jiti@2.7.0)(lightningcss@1.32.0)(supports-color@7.2.0)(yaml@2.9.1)
 
+  packages/db:
+    dependencies:
+      '@reise-hq/domain':
+        specifier: workspace:*
+        version: link:../domain
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.13.6
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+      vitest:
+        specifier: ^3.2.4
+        version: 3.2.7(@types/node@24.13.6)(jiti@2.7.0)(lightningcss@1.32.0)(supports-color@7.2.0)(yaml@2.9.1)
+
   packages/domain:
     devDependencies:
       typescript:
