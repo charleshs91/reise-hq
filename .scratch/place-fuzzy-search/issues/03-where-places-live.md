@@ -164,3 +164,9 @@ the storage choice is unchanged, only the Place set's provenance moves.
 - "Done when" changes: a fresh clone runs generate + migrate + seed and ends with ~3,244
   places — and **generate now requires network access**, which the previous wording did
   not.
+
+### Amendment from [04](04-match-and-ranking-rule.md)
+
+`places` gains **`search_text`** (text, not null) — `lower(strip_diacritics(name + ' ' +
+city + ' ' + id))`, generated at seed time. `LIKE` runs against it; display uses the real
+columns. The `type` column **stays**: 04's ranking breaks ties on it.
