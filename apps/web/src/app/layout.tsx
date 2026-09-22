@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "reise-hq",
-  description: "Personal travel dashboard",
+  description: "Flight candidate tracker",
 };
 
 export default function RootLayout({
@@ -11,9 +11,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className="bg-white text-zinc-900 antialiased dark:bg-black dark:text-zinc-50">
-        {children}
-      </body>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }

@@ -120,6 +120,13 @@ describe("searches", () => {
     );
   });
 
+  it("rejects an out-of-range date with a readable message", () => {
+    const tripId = createTrip(db, "Zürich");
+    expect(() => newSearch(tripId, { departureDate: "2026-13-45" })).toThrow(
+      /departure date/,
+    );
+  });
+
   it("rejects a return before the departure", () => {
     const tripId = createTrip(db, "Zürich");
     expect(() => newSearch(tripId, { returnDate: "2026-09-30" })).toThrow(
@@ -147,7 +154,7 @@ describe("candidates and prices", () => {
     const candidate = getTripPage(db, tripId)?.searches[0]?.candidates[0];
     expect(candidate).toMatchObject({ label: "LX 317", stops: "direct" });
     expect(candidate?.observations).toEqual([
-      { amount: 180, observedAt: "2026-09-23T09:00:00Z" },
+      { amount: 180, observedAt: "2026-09-23T09:00:00Z", remark: null },
     ]);
   });
 
@@ -189,6 +196,20 @@ describe("candidates and prices", () => {
         observedAt: "2026-09-23T09:00:00Z",
       }),
     ).toThrow(/amount/);
+  });
+
+  it("says plainly when a Candidate or Search has gone", () => {
+    setup();
+    expect(() => {
+      logPrice(db, {
+        candidateId: "gone",
+        amount: 1,
+        observedAt: "2026-09-23T09:00:00Z",
+      });
+    }).toThrow(/no longer exists/);
+    expect(() => {
+      deleteCandidate(db, "gone");
+    }).toThrow(/no longer exists/);
   });
 
   it("deletes a Candidate and its history", () => {

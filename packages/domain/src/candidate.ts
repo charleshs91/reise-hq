@@ -14,6 +14,8 @@ export type PriceObservation = {
   readonly amount: number;
   /** ISO timestamp. */
   readonly observedAt: string;
+  /** Optional free text. In the model; nothing in v1 writes it. */
+  readonly remark?: string | null;
 };
 
 export type PriceDelta = {

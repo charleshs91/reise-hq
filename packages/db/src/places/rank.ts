@@ -23,14 +23,14 @@ function tier(place: PlaceRow, query: string): number | null {
 
 const typeOrder = { large_airport: 0, medium_airport: 1 } as const;
 
-/** Ties: city slug first, then large before medium airport, then name. */
+/** Ties: city slug first, then large before medium airport, then name, then id for stability. */
 function tieBreak(a: PlaceRow, b: PlaceRow): number {
   const kind = Number(b.kind === "citySlug") - Number(a.kind === "citySlug");
   if (kind !== 0) return kind;
   const type =
     (a.type ? typeOrder[a.type] : 2) - (b.type ? typeOrder[b.type] : 2);
   if (type !== 0) return type;
-  return a.name.localeCompare(b.name);
+  return a.name.localeCompare(b.name, "en") || a.id.localeCompare(b.id);
 }
 
 /** Every matching Place, best first. A query under two characters matches nothing. */

@@ -144,7 +144,11 @@ export function getTripPage(db: Db, tripId: string): TripPage | null {
           stops: c.stops,
           observations: observationRows
             .filter((o) => o.candidateId === c.id)
-            .map((o) => ({ amount: o.amount, observedAt: o.observedAt })),
+            .map((o) => ({
+              amount: o.amount,
+              observedAt: o.observedAt,
+              remark: o.remark,
+            })),
         })),
     })),
   };
@@ -163,10 +167,9 @@ export type NewSearch = {
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 function isIsoDate(value: string): boolean {
-  return (
-    ISO_DATE.test(value) &&
-    new Date(`${value}T00:00:00Z`).toISOString().startsWith(value)
-  );
+  if (!ISO_DATE.test(value)) return false;
+  const date = new Date(`${value}T00:00:00Z`);
+  return !Number.isNaN(date.getTime()) && date.toISOString().startsWith(value);
 }
 
 export function createSearch(db: Db, input: NewSearch): string {
@@ -213,6 +216,15 @@ export function createCandidate(db: Db, input: NewCandidate): string {
   const label = input.label.trim();
   if (label === "") throw new Error("A Candidate needs a label");
   assertAmount(input.amount);
+  if (
+    !db
+      .select({ id: searches.id })
+      .from(searches)
+      .where(eq(searches.id, input.searchId))
+      .get()
+  ) {
+    throw new Error("That Search no longer exists");
+  }
 
   const id = newId();
   db.transaction((tx) => {
@@ -240,6 +252,15 @@ export function logPrice(
   },
 ): void {
   assertAmount(input.amount);
+  if (
+    !db
+      .select({ id: candidates.id })
+      .from(candidates)
+      .where(eq(candidates.id, input.candidateId))
+      .get()
+  ) {
+    throw new Error("That Candidate no longer exists");
+  }
   db.insert(priceObservations)
     .values({ id: newId(), ...input })
     .run();
@@ -254,7 +275,11 @@ export function setStops(db: Db, candidateId: string, stops: Stops): void {
 
 /** The one act that destroys price history; the schema cascades to observations. */
 export function deleteCandidate(db: Db, candidateId: string): void {
-  db.delete(candidates).where(eq(candidates.id, candidateId)).run();
+  const { changes } = db
+    .delete(candidates)
+    .where(eq(candidates.id, candidateId))
+    .run();
+  if (changes === 0) throw new Error("That Candidate no longer exists");
 }
 
 // ── Place search ────────────────────────────────────────────────────────────
