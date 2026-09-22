@@ -130,10 +130,11 @@ export function CandidateRow({
             disabled={pending}
             onClick={() => {
               startTransition(async () => {
-                await deleteCandidateAction({
+                const result = await deleteCandidateAction({
                   tripId,
                   candidateId: candidate.id,
                 });
+                if (result) setError(result.error);
               });
             }}
           >
