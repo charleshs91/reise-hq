@@ -27,6 +27,8 @@ An **amendment to the shipped v1 spec** of the flight-candidate tracker: `spec.m
 
 - [The match and ranking rule](issues/04-match-and-ranking-rule.md): matching folds diacritics into a new **`search_text`** column (`lower(strip_diacritics(name + city + id))`) generated at seed time — the dataset's _English_ names are spelled `Zürich`, `São Paulo`, `İstanbul`, so without it `zurich` silently returns nothing. Ranking is **five tiers** — exact id, city-slug city prefix, airport city prefix, airport name prefix, any remaining substring — with ties broken by **`type` (large before medium)** then alphabetically, so **`03`'s `type` column survives**. A city slug outranks its own airports only when the _city_ was typed: "Heathrow" does not surface "London — all airports" at all. IATA matches by **prefix, never infix** (`la` must not hit `GLA`). Minimum 2 characters, cap 10 with a "showing 10 of 240" notice; a **Server Action per keystroke against SQLite**, one `LIKE` fetch with the **ranking as a pure, unit-tested TypeScript function** — the spec names the rule and a query→expected-results table, not the SQL. Empty state is "No matching airport or city — try the airport code", and free text is blocked structurally at three layers: no form value, submit disabled, server rejects an unknown `placeId`.
 
+- [Prototype the Place input](issues/05-place-input-prototype.md): built four variants over a **real** 3,258-row scratch SQLite table; **the dense, code-first one wins**. What survives: single-line rows with the identifier first, **the matched run marked** (by weight and colour, never a highlighter block — that is what broke first in dark mode), a settled Place that is itself the click target back into search, selected state read from **fill rather than border weight**, a **two-month range picker** replacing two `<input type="date">` with one-way as an explicit choice, and **light/dark as a token swap**. On latency: the `LIKE` query runs in **0.2–1.6ms** and the whole round trip in **~34ms**, so the debounce is a feel decision, not a load one — **150ms** never got in the way. Two implementation traps recorded: `node:sqlite` returns null-prototype rows React refuses to serialise, and the app's root layout is already dark-aware.
+
 ## Not yet specified
 
 - Refreshing the dataset over time. Sharper now that the seed is built rather than committed: two clones seeded on different days hold different Place sets, and re-seeding is the moment a Search could point at a Place that has left the dataset. v1 seeds once and never refreshes, so this is real but not yet live — [ADR 0002](../../docs/adr/0002-places-seeded-from-an-open-dataset.md) names it as the revisit trigger.
@@ -36,6 +38,9 @@ An **amendment to the shipped v1 spec** of the flight-candidate tracker: `spec.m
 - A query that is a real IATA code we filtered out (`ISL` İstanbul Atatürk, and the other 1,324 `scheduled_service = no` rows) gets the same blank empty state as a typo. Telling those apart means seeding the excluded rows to apologise for them; revisit only if someone actually hits it.
 - Non-airport origins and destinations (rail stations, bus). Skyscanner has them; whether this model should is untouched.
 - Whether the curated overlay ever needs an in-app editing surface, or stays a code edit forever.
+- How the Place input behaves on a phone. The prototype was judged at desk width; the
+  winning variant's dense single-line rows are the part most likely to need a second
+  look on a narrow screen. Not sharp enough to ticket until someone tries it.
 
 ## Out of scope
 
