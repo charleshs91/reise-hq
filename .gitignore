@@ -30,3 +30,6 @@ apps/web/CLAUDE.md
 # Prototype scratch data (see branch prototype/place-input)
 apps/web/PROTOTYPE-places-wipe-me.sqlite
 apps/web/src/app/prototype/place-input/.cache/
+
+# Local database and generated Place seed (ADR 0001, ADR 0002)
+/data/

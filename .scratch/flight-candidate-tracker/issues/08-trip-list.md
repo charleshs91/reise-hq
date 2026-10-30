@@ -2,7 +2,7 @@
 
 Parent: ../map.md
 Spec: ../spec.md
-Status: ready-for-agent
+Status: resolved
 Depends on: 07
 
 ## Goal

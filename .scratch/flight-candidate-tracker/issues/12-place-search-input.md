@@ -2,7 +2,7 @@
 
 Parent: ../map.md
 Spec: ../spec.md
-Status: ready-for-agent
+Status: resolved
 Depends on: 07
 
 ## Goal
@@ -38,3 +38,17 @@ serialise — spread them into plain objects; the root layout is already dark-aw
   against a small hand-built fixture, not the live dataset.
 - A request with an unknown `placeId` is rejected server-side.
 - `zurich`, `heathrow` and `london` behave as the table says in the running app.
+
+## Comments
+
+**Implementation (2026-09-23):** two rows of the ranking table disagree with the rule
+on the real data, the same way `la` did before it was corrected. The tests assert the
+rule, not the table:
+
+- `london` — LGW sorts before LHR: both are `large_airport` with city London, so the
+  alphabetical tie-break puts "London Gatwick" first. The table's "LHR first on
+  `large_airport`" cannot hold.
+- `sao p` — São Pedro's VXE ties with GRU as an airport-city prefix and sorts first on
+  name ("Cesaria Evora…").
+
+If LHR-before-LGW is wanted, that is a new tie-break (e.g. passenger volume), not a fix.
